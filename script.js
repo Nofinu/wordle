@@ -1,5 +1,6 @@
 const container = document.querySelector(".container")
 
+
 let entry = []
 let lastEntry = []
 let word = ""
@@ -106,6 +107,26 @@ function init (){
         }
         container.appendChild(divWord)
     } 
+
+   document.addEventListener("click",e=>{
+        let key = e.target.innerText    
+
+        if(trys<=5){
+            if(isLetter(key) && entry.length < word.length){
+                entry.push(key)
+                putLetter()
+            }
+            if (key === '⌫') {
+                entry.pop()
+                putLetter()
+            }
+            if(key === '↲'){
+                if(entry.length == word.length){
+                    wordValidation()
+                }
+            }
+        }
+   })
 }
 
 function selectLetter (){
@@ -175,11 +196,25 @@ function wordValidation(){
         showResume()
     }else{
         for(let i = 0; i<letter.length;i++){
+            console.log("entry :"+entry[i]+" word :"+word[i])
             if(entry[i] === word[i]){
                 letter[i].setAttribute("class","letter good")
+
+                let letterWord = entry[i].toLocaleUpperCase()
+                let btn = document.querySelector(`#btn${letterWord}`)
+                btn.setAttribute("class","good")
             }
             else if(word.includes(entry[i])){
                 letter[i].setAttribute("class","letter misplaced")
+
+                let letterWord = entry[i].toLocaleUpperCase()
+                let btn = document.querySelector(`#btn${letterWord}`)
+                btn.setAttribute("class","misplaced")
+            }else if(!word.includes(entry[i])){
+                let letterWord = entry[i].toLocaleUpperCase()
+                let btn = document.querySelector(`#btn${letterWord}`)
+                btn.setAttribute("class","disabled")
+                btn.disabled = true
             }
         }
     }
@@ -225,6 +260,7 @@ console.log(modal);
 
 document.addEventListener("keydown",(event)=>{
     let key = event.key
+    console.log(key)
     if(trys<=5){
         if(isLetter(key) && entry.length < word.length){
             entry.push(key)

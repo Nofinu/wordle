@@ -40,15 +40,19 @@ div[class^="word"]{
 }
 
 .good{
-    background-color: rgba(20, 165, 20, 0.6);
+    background-color: rgba(20, 165, 20, 0.6) !important;
 }
 
 .misplaced{
-    background-color: rgba(207, 207, 10,0.6);
+    background-color: rgba(207, 207, 10,0.6) !important;
 }
 
 .wrong{
-    background-color: rgba(221, 2, 2,0.6);
+    background-color: rgba(221, 2, 2,0.6) !important;
+}
+
+.disabled{
+    background-color: rgba(103, 103, 103, 0.694) !important;
 }
 
 .square{
@@ -104,3 +108,32 @@ div[class^="word"]{
     text-decoration: none;
     cursor: pointer;
   }
+
+
+/* keyboard button */
+
+.keyBoardContainer{
+    margin-top: 3rem;
+    width: 80%;
+}
+
+.keyRow{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 0.3rem;
+    margin-top: 0.3rem;
+}
+
+.keyRow>button{
+    height: 80px;
+    width: 80px;
+    background-color: rgba(20, 20, 87, 0.687);
+    color: rgb(234, 234, 234);
+    border: none;
+    border-radius: 5px;
+}
+
+.keyRow>.btnSpecial{
+     background-color: rgba(62, 62, 90, 0.815);
+}
