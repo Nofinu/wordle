@@ -1,5 +1,10 @@
 const container = document.querySelector(".container")
+const keyboardContainer = document.querySelector(".keyBoardContainer")
 
+console.log(keyboardContainer);
+
+
+const letterKeyBoard = [["A","Z","E","R","T","Y","U","I","O","P"],["Q","S","D","F","G","H","J","K","L","M"],[".","W","X","C","V","B","N","⌫","↲"]]
 
 let entry 
 let lastEntry = []
@@ -16,6 +21,7 @@ async function startGame (){
     let wordLength = getRandom(4, 9)
 
     container.innerHTML = ""
+    keyboardContainer.innerHTML = ""
 
     entry = []
     lastEntry = []
@@ -24,6 +30,8 @@ async function startGame (){
     trys = 1
 
     wordList = []
+
+    modalContent.innerHTML = "<p></p>"
 
     await getJson(wordLength)
     await getword(wordLength)
@@ -79,6 +87,7 @@ async function getword(wordLenght) {
 
         //initialisation de la page
         init()
+        initKeyBoard()
         //reecuperation des div letter
         selectLetter()
 
@@ -105,6 +114,27 @@ function init() {
             divWord.appendChild(divletter)
         }
         container.appendChild(divWord)
+    }
+}
+
+function initKeyBoard(){
+    for(let i =0; i<letterKeyBoard.length;i++){
+        let divKeyRow = document.createElement("div")
+        divKeyRow.setAttribute("class","keyRow")
+
+        for(let j = 0; j<letterKeyBoard[i].length;j++){
+            let buttonLetter = document.createElement("button")
+            if(isLetter(letterKeyBoard[i][j])){
+                buttonLetter.setAttribute("id",`btn${letterKeyBoard[i][j]}`)
+            }else{
+                buttonLetter.setAttribute("class","btnSpecial")
+            }
+
+            buttonLetter.innerText = letterKeyBoard[i][j]
+            divKeyRow.appendChild(buttonLetter)
+        }
+
+        keyboardContainer.appendChild(divKeyRow)
     }
 }
 
@@ -284,7 +314,7 @@ document.addEventListener("keydown", (event) => {
     if (trys <= 5) {
         
         if (isLetter(key) && entry.length < word.length) {
-            entry.push(key)
+            entry.push(key.toLocaleLowerCase())
             putLetter()
         }
         if (key === 'Delete' || key === 'Backspace') {
