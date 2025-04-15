@@ -1,38 +1,36 @@
 const container = document.querySelector(".container")
 
 
-let entry = []
+let entry 
 let lastEntry = []
-let word = ""
-let trys = 1
+let trys 
 let letter
-let find = false
-let wordLength
-let wordList = []
+let find 
+
+let wordList
 
 var modal = document.getElementById("myModal");
 var modalContent = document.querySelector(".modal-content");
-var span = document.getElementsByClassName("close")[0];
 
-// When the user clicks on <span> (x), close the modal
-span.onclick = function () {
-    modal.style.display = "none";
+async function startGame (){
+    let wordLength = getRandom(4, 9)
+
+    container.innerHTML = ""
+
+    entry = []
+    lastEntry = []
+    word = ""
+    find = false
+    trys = 1
+
+    wordList = []
+
+    await getJson(wordLength)
+    await getword(wordLength)
+    
+
+  
 }
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function (event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
-
-
-wordLength = getRandom(4, 9)
-
-getword(wordLength)
-getJson(wordLength)
-
-
 
 
 async function getJson(wordLenght) {
@@ -86,30 +84,10 @@ async function getword(wordLenght) {
 
     } catch (error) {
         console.error(error.message);
+        console.log(error);
+        
     }
 }
-
-// async function verifWord() {
-//     let entrystr =""
-//     for(let i = 0; i<entry.length;i++){
-//         entrystr+= entry[i]
-//     }
-//     const url = "https://fr.wiktionary.org/wiki/"+entrystr
-//     console.log(url);
-
-//     try {
-//         const response = await fetch(url);
-//         if (!response.ok) {
-//         throw new Error(`Response status: ${response.status}`);
-//         }
-
-//         const json = await response.json();
-//         console.log(json);
-//     } catch (error) {
-//         console.error(error.message);
-//     }
-
-// }
 
 function init() {
     console.log(wordList);
@@ -128,26 +106,6 @@ function init() {
         }
         container.appendChild(divWord)
     }
-
-    document.addEventListener("click", e => {
-        let key = e.target.innerText
-
-        if (trys <= 5) {
-            if (isLetter(key) && entry.length < word.length) {
-                entry.push(key)
-                putLetter()
-            }
-            if (key === '⌫') {
-                entry.pop()
-                putLetter()
-            }
-            if (key === '↲') {
-                if (entry.length == word.length) {
-                    wordValidation()
-                }
-            }
-        }
-    })
 }
 
 function selectLetter() {
@@ -224,7 +182,7 @@ function wordValidation() {
             for (let i = 0; i < letter.length; i++) {
                 letter[i].setAttribute("class", "letter good")
             }
-            resetEntry()
+            resetEntry(true)
             showResume()
         } else {
             for (let i = 0; i < letter.length; i++) {
@@ -274,34 +232,57 @@ function wordValidation() {
 
 function showResume() {
     console.log(modal);
-    modalContent.children[1].innerHTML = "Le mot était : <b>" + word + "</b>"
+    modalContent.children[0].innerHTML = "Le mot était : <b>" + word + "</b>"
     lastEntry.forEach((ent) => {
         let divrow = document.createElement("div")
         divrow.setAttribute("class", "rowResume")
         for (let i = 0; i < ent.length; i++) {
             let divSquare = document.createElement("div")
             if (ent[i] === word[i]) {
-                divSquare.setAttribute("class", "square good")
+                divSquare.setAttribute("class", "squareResume good")
             }
             else if (word.includes(ent[i])) {
-                divSquare.setAttribute("class", "square misplaced")
+                divSquare.setAttribute("class", "squareResume misplaced")
             } else {
-                divSquare.setAttribute("class", "square wrong")
+                divSquare.setAttribute("class", "squareResume wrong")
             }
 
             divrow.appendChild(divSquare)
         }
         modalContent.appendChild(divrow)
+
+
     })
 
+    let spanClose = document.createElement("span")
+    spanClose.setAttribute("class","close")
+    spanClose.innerText = "✕"
+    // When the user clicks on <span> (x), close the modal
+    spanClose.onclick = function () {
+        modal.style.display = "none";
+        startGame()
+    }
+    
+    modalContent.appendChild(spanClose)
+
     modal.style.display = "block";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function (event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+        startGame()
+    }
 }
 
 
 
 document.addEventListener("keydown", (event) => {
+    
     let key = event.key
     if (trys <= 5) {
+        
         if (isLetter(key) && entry.length < word.length) {
             entry.push(key)
             putLetter()
@@ -318,5 +299,28 @@ document.addEventListener("keydown", (event) => {
     }
 })
 
+document.addEventListener("click", e => {
+    
+    let key = e.target.innerText
+
+    if (trys <= 5) {
+        if (isLetter(key) && entry.length < word.length) {
+            entry.push(key)
+            putLetter()
+        }
+        if (key === '⌫') {
+            entry.pop()
+            putLetter()
+        }
+        if (key === '↲') {
+            if (entry.length == word.length) {
+                wordValidation()
+            }
+        }
+    }
+})
+
+
+startGame()
 
 
