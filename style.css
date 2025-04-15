@@ -137,3 +137,19 @@ div[class^="word"]{
 .keyRow>.btnSpecial{
      background-color: rgba(62, 62, 90, 0.815);
 }
+
+.shake{
+    animation: shake 0.1s linear 0s 3 reverse;
+}
+
+@keyframes shake{
+    33%{
+        transform: translatex(10px);
+    }
+    66%{
+        transform: translatex(-20px);
+    }
+    100%{
+        transform: translate(10px);
+    }
+}
