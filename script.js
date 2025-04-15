@@ -42,7 +42,7 @@ async function startGame (){
 
 
 async function getJson(wordLenght) {
-    const url = `./words/word${wordLenght}.json`
+    const url = `https://nofinu.github.io/wordle/words/word${wordLenght}.json`
     await fetch(url)
         .then(response => response.json())
         .then(data => {
